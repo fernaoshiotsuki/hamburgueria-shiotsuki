@@ -2,11 +2,16 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 interface UserData {
+  data?: object;
   email: string;
   password: string;
 }
+
 const Home = () => {
+  const [token, setToken] = useState([]);
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -27,7 +32,11 @@ const Home = () => {
   });
 
   const onSubmit = (data: UserData) => {
-    axios.get("http://localhost:3001/login", { data });
+    console.log(data);
+
+    axios.post("http://localhost:3001/login", data).then((res) => {
+      console.log(res.data);
+    });
   };
 
   return (

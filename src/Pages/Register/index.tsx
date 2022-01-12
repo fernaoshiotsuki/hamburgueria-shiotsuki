@@ -7,6 +7,7 @@ interface UserData {
   email: string;
   password: string;
   confirmPassword: string;
+  data?: object;
 }
 const Register = () => {
   const schema = yup.object().shape({
@@ -31,7 +32,7 @@ const Register = () => {
   });
 
   const onSubmit = (data: UserData) => {
-    axios.post("http://localhost:3001/register", { data });
+    axios.post("http://localhost:3001/register", data);
   };
 
   return (

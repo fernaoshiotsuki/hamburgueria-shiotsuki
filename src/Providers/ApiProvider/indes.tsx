@@ -24,6 +24,7 @@ interface Product {
 }
 
 interface ApiProviderData {
+  menu: Product[];
   cart: Product[];
   userRegister: (data: UserData) => void;
   userLogin: (data: UserData) => void;
@@ -35,6 +36,7 @@ const ApiContext = createContext<ApiProviderData>({} as ApiProviderData);
 
 export const ApiProvider = ({ children }: childrenProps) => {
   const [cart, setCart] = useState<Product[]>([]);
+  const [menu, setMenu] = useState<Product[]>([]);
   const userRegister = (data: UserData) => {
     axios
       .post("http//localhost:3001/register", { data })
@@ -55,7 +57,10 @@ export const ApiProvider = ({ children }: childrenProps) => {
   const getProducts = () => {
     axios
       .get("http//localhost:3001/products")
-      .then((res) => console.log(res.data))
+      .then((res) => {
+        console.log(res.data);
+        setMenu(res.data);
+      })
       .catch((err) => {
         console.log(err.message);
       });
@@ -81,6 +86,7 @@ export const ApiProvider = ({ children }: childrenProps) => {
         removeProduct,
         getProducts,
         cart,
+        menu,
       }}
     >
       {children}
