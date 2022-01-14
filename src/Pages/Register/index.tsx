@@ -2,6 +2,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 interface UserData {
   name: string;
   email: string;
@@ -10,6 +11,7 @@ interface UserData {
   data?: object;
 }
 const Register = () => {
+  const navigate = useNavigate();
   const schema = yup.object().shape({
     name: yup.string().required(),
     email: yup
@@ -32,7 +34,11 @@ const Register = () => {
   });
 
   const onSubmit = (data: UserData) => {
-    axios.post("http://localhost:3001/register", data);
+    axios
+      .post("http://localhost:3001/register", data)
+      .then((res) => console.log(res.data))
+      .then(() => navigate("/"))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -47,3 +53,4 @@ const Register = () => {
     </div>
   );
 };
+export default Register;

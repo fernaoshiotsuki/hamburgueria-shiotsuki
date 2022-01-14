@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { ApiProvider } from "./ApiProvider/indes";
 import { AppProvider } from "./ChakraProvider";
 
 interface childrenProps {
@@ -6,5 +7,9 @@ interface childrenProps {
 }
 
 export const Providers = ({ children }: childrenProps) => {
-  return <AppProvider>{children}</AppProvider>;
+  return (
+    <AppProvider>
+      <ApiProvider>{children}</ApiProvider>
+    </AppProvider>
+  );
 };

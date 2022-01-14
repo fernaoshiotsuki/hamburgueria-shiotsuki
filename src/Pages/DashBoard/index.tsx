@@ -1,12 +1,7 @@
+import { useEffect } from "react";
+import Header from "../../Components/Header/inde";
+import MenuContainer from "../../Components/MenuContainer";
 import { UseApi } from "../../Providers/ApiProvider/indes";
-// interface ApiProviderData {
-//     cart: Product[];
-//     userRegister: (data: UserData) => void;
-//     userLogin: (data: UserData) => void;
-//     getProducts: () => void;
-//     addProduct: (product: Product) => void;
-//     removeProduct: (product: Product) => void;
-//   }
 
 const DashBoard = () => {
   const {
@@ -17,4 +12,15 @@ const DashBoard = () => {
     getProducts,
     cart,
   } = UseApi();
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+  return (
+    <div>
+      <Header />
+      <MenuContainer />
+    </div>
+  );
 };
+export default DashBoard;

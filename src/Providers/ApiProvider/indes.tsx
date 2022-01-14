@@ -21,18 +21,20 @@ interface Product {
   id: string;
   type: string;
   img: string;
+  search?: object;
 }
 
 interface ApiProviderData {
   menu: Product[];
   cart: Product[];
+  filteredMenu: (search: Product[]) => void;
   userRegister: (data: UserData) => void;
   userLogin: (data: UserData) => void;
   getProducts: () => void;
   addProduct: (product: Product) => void;
   removeProduct: (product: Product) => void;
 }
-const ApiContext = createContext<ApiProviderData>({} as ApiProviderData);
+export const ApiContext = createContext<ApiProviderData>({} as ApiProviderData);
 
 export const ApiProvider = ({ children }: childrenProps) => {
   const [cart, setCart] = useState<Product[]>([]);
@@ -56,7 +58,7 @@ export const ApiProvider = ({ children }: childrenProps) => {
   };
   const getProducts = () => {
     axios
-      .get("http//localhost:3001/products")
+      .get("http://localhost:3001/products")
       .then((res) => {
         console.log(res.data);
         setMenu(res.data);
@@ -64,6 +66,11 @@ export const ApiProvider = ({ children }: childrenProps) => {
       .catch((err) => {
         console.log(err.message);
       });
+  };
+
+  const filteredMenu = (search: Product[]) => {
+    setMenu((old) => search);
+    console.log(search);
   };
 
   const addProduct = (product: Product) => {
@@ -76,7 +83,7 @@ export const ApiProvider = ({ children }: childrenProps) => {
     });
     setCart(newCartList);
   };
-
+  console.log(getProducts);
   return (
     <ApiContext.Provider
       value={{
@@ -87,6 +94,7 @@ export const ApiProvider = ({ children }: childrenProps) => {
         getProducts,
         cart,
         menu,
+        filteredMenu,
       }}
     >
       {children}
