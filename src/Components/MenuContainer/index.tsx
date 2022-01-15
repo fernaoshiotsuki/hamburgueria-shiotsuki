@@ -14,12 +14,6 @@ const MenuContainer = () => {
   const storageMenu = localStorage.getItem("menu");
   let displayItems = undefined;
 
-  // useEffect(() => {
-  //   if (typeof storageMenu === "string") {
-  //     displayItems = JSON.parse(storageMenu);
-  //   }
-  // }, ]);
-
   if (typeof storageMenu === "string") {
     displayItems = JSON.parse(storageMenu);
   }
@@ -31,7 +25,7 @@ const MenuContainer = () => {
   }, [menu]);
 
   return (
-    <div>
+    <>
       {menu?.map((item) => {
         return (
           <div key={item.id}>
@@ -43,7 +37,7 @@ const MenuContainer = () => {
           </div>
         );
       })}
-    </div>
+    </>
   );
 };
 export default MenuContainer;

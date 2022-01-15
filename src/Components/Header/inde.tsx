@@ -1,6 +1,6 @@
 import { Input } from "@chakra-ui/react";
-import React, { InputHTMLAttributes, SetStateAction, useState } from "react";
-import { json } from "stream/consumers";
+import { useState } from "react";
+
 import { UseApi } from "../../Providers/ApiProvider/indes";
 import Cart from "../Cart";
 
@@ -8,13 +8,9 @@ interface Input {
   input: string;
 }
 
-interface DisplayCart {
-  inDisplay: boolean;
-  setInDisplay?: React.Dispatch<SetStateAction<boolean>>;
-}
 const Header = () => {
   const { menu, getProducts, filteredMenu } = UseApi();
-  const [inDisplay, setInDisplay] = React.useState(false);
+  const [inDisplay, setInDisplay] = useState(false);
   const [input, setInput] = useState("");
 
   const handleSearch = () => {

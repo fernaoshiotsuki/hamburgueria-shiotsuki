@@ -63,49 +63,100 @@ const Home = () => {
   };
 
   return (
-    <VStack>
-      <Flex h="10vh">
-        <h1>Burguer</h1>
-        <h2 color="red.22">Kenzie</h2>
+    <Flex
+      overflowY="scroll"
+      w="100vw"
+      h="100vh"
+      alignItems="center"
+      justifyContent={["center", "center", "space-evenly", "space-evenly"]}
+      direction={["column", "column", "row-reverse", "row-reverse"]}
+    >
+      <Flex direction={"column"}>
+        <Flex h="15vh" alignItems="center">
+          <Text fontSize="4xl" fontWeight="600" p="1">
+            Burguer
+          </Text>
+          <Text color="red.22" fontSize="xl" fontWeight="600" marginTop="10px">
+            Kenzie
+          </Text>
+        </Flex>
+        <Container
+          h="95px"
+          border="solid 1px "
+          borderRadius="3px"
+          borderColor="gray.20"
+          w={["377px"]}
+        >
+          <Text fontSize="14px">
+            A vida é como um sanduiche, é preciso recheá-la com os melhores
+            ingredientes
+          </Text>
+        </Container>
       </Flex>
-      <Container h="10vh" border={"solid 2px gray"} w="90vw">
-        <Text>
-          A vida é como um sanduiche, é preciso recheá-la com os melhores
-          ingredientes
-        </Text>
-      </Container>
-      <FormControl
-        h="79vh"
-        w="90vw"
-        margin={"10px"}
-        border="solid 2px gray"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <FormLabel htmlFor="email">Login</FormLabel>
-        <Input m="10px" w="90%" p="7" type="email" {...register("email")} />
-        <Input
-          m="10px"
-          w="90%"
-          p="7"
-          {...register("password")}
-          type="password"
-        />
-        <Stack>
-          <Button m="10px" p="7" type="submit">
-            Logar
-          </Button>
-          <Button m="10px" p="7" onClick={() => navigate("/register")}>
-            Cadastrar-se
-          </Button>
-        </Stack>
-      </FormControl>
-    </VStack>
+
+      <Flex>
+        <FormControl
+          h="461px"
+          w={["377px", "377px", "377px", "500px"]}
+          margin={"10px"}
+          border="solid 2px"
+          borderColor="gray.20"
+          borderRadius="3px"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormLabel p="3" fontWeight="600" htmlFor="email">
+              Login
+            </FormLabel>
+            <Input
+              border="2px"
+              borderColor="gray.40"
+              m="10px"
+              w="90%"
+              p="7"
+              type="email"
+              placeholder="Email"
+              {...register("email")}
+            />
+            <Input
+              border="2px"
+              borderColor="gray.40"
+              m="10px"
+              w="90%"
+              p="7"
+              placeholder="Senha"
+              {...register("password")}
+              type="password"
+            />
+
+            <Stack alignItems="center">
+              <Button
+                m="10px"
+                p="7"
+                w="90%"
+                color="gray.10"
+                bgColor="green.100"
+                type="submit"
+              >
+                Logar
+              </Button>
+              <Text fontSize="14px" color="gray.30" p="3">
+                Crie uma conta para saborear muitas delícias e matar sua fome!
+              </Text>
+              <Button
+                m="10px"
+                p="7"
+                w="90%"
+                color="gray.30"
+                onClick={() => navigate("/register")}
+              >
+                Cadastrar-se
+              </Button>
+            </Stack>
+          </form>
+        </FormControl>
+      </Flex>
+    </Flex>
   );
 };
 export default Home;
-
-// <FormControl>
-//   <FormLabel htmlFor="email">Email address</FormLabel>
-//   <Input id="email" type="email" />
-//   <FormHelperText>We'll never share your email.</FormHelperText>
-// </FormControl>;

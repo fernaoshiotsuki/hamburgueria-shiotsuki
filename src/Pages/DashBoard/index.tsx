@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import { useEffect } from "react";
 import Header from "../../Components/Header/inde";
 import MenuContainer from "../../Components/MenuContainer";
@@ -17,10 +18,14 @@ const DashBoard = () => {
     getProducts();
   }, []);
   return (
-    <div>
-      <Header />
-      <MenuContainer />
-    </div>
+    <Flex direction="column">
+      <Flex direction="row">
+        <Header />
+      </Flex>
+      <Flex direction="row" overflowX="scroll" h="400px">
+        <MenuContainer />
+      </Flex>
+    </Flex>
   );
 };
 export default DashBoard;
