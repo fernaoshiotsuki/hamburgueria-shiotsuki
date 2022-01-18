@@ -5,16 +5,17 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { UseApi } from "../../Providers/ApiProvider/indes";
+import { RiShoppingBag3Line } from "react-icons/ri";
 import {
   Button,
   Container,
   Flex,
   FormControl,
   FormLabel,
+  Icon,
   Input,
   Stack,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 interface UserData {
   data?: object;
@@ -29,11 +30,11 @@ const Home = () => {
   const schema = yup.object().shape({
     email: yup
       .string()
-      .required("Digite seu email para cadastrar")
+      .required("Digite seu email")
       .email("Digite um Email valido"),
     password: yup
       .string()
-      .required("Digite uma senha")
+      .required("Digite sua senha")
       .min(6, "Sua senha precisa ter min 6 caracteres"),
   });
 
@@ -49,7 +50,7 @@ const Home = () => {
     console.log(data);
 
     axios
-      .post("http://localhost:3001/login", data)
+      .post("https://json-server-hamburgueriakenzie.herokuapp.com/login", data)
       .then((res) => {
         console.log(res.data);
         setToken(res.data.accessToken);
@@ -82,11 +83,28 @@ const Home = () => {
         </Flex>
         <Container
           h="95px"
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
           border="solid 1px "
           borderRadius="3px"
           borderColor="gray.20"
           w={["377px"]}
         >
+          <Container
+            bgColor="#27ae6047"
+            borderRadius="3px"
+            display="flex"
+            justifyContent="start"
+            alignContent="center"
+            maxH="60px"
+            height="60px"
+            maxWidth="60px"
+          >
+            <Icon w={10} h={10} alignSelf="center" justifySelf="center">
+              <RiShoppingBag3Line />
+            </Icon>
+          </Container>
           <Text fontSize="14px">
             A vida é como um sanduiche, é preciso recheá-la com os melhores
             ingredientes
@@ -113,26 +131,31 @@ const Home = () => {
               borderColor="gray.40"
               m="10px"
               w="90%"
-              p="7"
+              p="6"
               type="email"
               placeholder="Email"
               {...register("email")}
             />
+            <Text fontSize="11px" zIndex="1" color="red.22">
+              {errors.email?.message}
+            </Text>
             <Input
               border="2px"
               borderColor="gray.40"
               m="10px"
               w="90%"
-              p="7"
+              p="6"
               placeholder="Senha"
               {...register("password")}
               type="password"
             />
-
+            <Text fontSize="11px" zIndex="1" color="red.22">
+              {errors.password?.message}
+            </Text>
             <Stack alignItems="center">
               <Button
                 m="10px"
-                p="7"
+                p="6"
                 w="90%"
                 color="gray.10"
                 bgColor="green.100"
@@ -145,7 +168,7 @@ const Home = () => {
               </Text>
               <Button
                 m="10px"
-                p="7"
+                p="6"
                 w="90%"
                 color="gray.30"
                 onClick={() => navigate("/register")}

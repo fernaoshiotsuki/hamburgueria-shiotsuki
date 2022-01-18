@@ -1,6 +1,7 @@
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { RiShoppingBag3Line } from "react-icons/ri";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -9,11 +10,11 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Icon,
   Input,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import * as CSS from "csstype";
 
 interface UserData {
   name: string;
@@ -25,12 +26,8 @@ interface UserData {
 const Register = () => {
   const navigate = useNavigate();
 
-  const style: CSS.Properties = {
-    width: "10px",
-    height: "10px",
-  };
   const schema = yup.object().shape({
-    name: yup.string().required(),
+    name: yup.string().required("Digite seu nome de user"),
     email: yup
       .string()
       .required("Digite seu email para cadastrar")
@@ -39,7 +36,9 @@ const Register = () => {
       .string()
       .required("Digite uma senha")
       .min(6, "Sua senha precisa ter min 6 caracteres"),
-    confirmPassword: yup.string().required("!match"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "confirmação não está identica"),
   });
 
   const {
@@ -51,18 +50,16 @@ const Register = () => {
   });
 
   const onSubmit = (data: UserData) => {
+    console.log(data);
     axios
-      .post("http://localhost:3001/register", data)
+      .post(
+        "https://json-server-hamburgueriakenzie.herokuapp.com/register",
+        data
+      )
       .then((res) => console.log(res.data))
       .then(() => navigate("/"))
       .catch((err) => console.log(err));
   };
-  let circle = [];
-  for (let i = 0; i < 20; i++) {
-    circle[i] = <div color="gray.20" className="cicles"></div>;
-  }
-
-  let divs = document.getElementsByClassName("circles");
 
   return (
     <Flex
@@ -73,8 +70,8 @@ const Register = () => {
       justifyContent={["center", "center", "space-evenly", "space-evenly"]}
       direction={["column", "column", "row", "row"]}
     >
-      <Flex direction={"column"} display={["none", "none", "none", "flex"]}>
-        <Flex h="15vh" alignItems="center">
+      <Flex direction={"column"}>
+        <Flex h="12vh" alignItems="center">
           <Text fontSize="4xl" fontWeight="600" p="1">
             Burguer
           </Text>
@@ -84,105 +81,125 @@ const Register = () => {
         </Flex>
         <Container
           h="95px"
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
           border="solid 1px "
           borderRadius="3px"
           borderColor="gray.20"
           w={["377px"]}
         >
+          <Container
+            bgColor="#27ae6047"
+            borderRadius="3px"
+            display="flex"
+            justifyContent="start"
+            alignContent="center"
+            maxH="60px"
+            height="60px"
+            maxWidth="60px"
+          >
+            <Icon w={10} h={10} alignSelf="center" justifySelf="center">
+              <RiShoppingBag3Line />
+            </Icon>
+          </Container>
           <Text fontSize="14px">
             A vida é como um sanduiche, é preciso recheá-la com os melhores
             ingredientes
           </Text>
         </Container>
-        <Container>{circle}</Container>
       </Flex>
 
       <Flex>
         <FormControl
-          h="461px"
-          w={["377px", "377px", "377px", "500px"]}
+          h={["471px", "471px", "478px", "461px"]}
+          w={["387px", "387px", "387px", "500px"]}
           margin={"10px"}
           border="solid 2px"
           borderColor="gray.20"
           borderRadius="3px"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <FormLabel p="3" fontWeight="600" fontSize="18px" htmlFor="email">
-            Cadastro{" "}
-            <Text fontSize="14px" as="u" marginLeft="220px" color="gray.30">
-              <Link rel="stylesheet" to="/">
-                Retornar para o Login
-              </Link>
-            </Text>
-          </FormLabel>
-          <Input
-            border="2px"
-            borderColor="gray.40"
-            m="10px"
-            w="90%"
-            p="7"
-            type="email"
-            placeholder="Nome"
-            {...register("name")}
-          />
-          <Input
-            border="2px"
-            borderColor="gray.40"
-            m="10px"
-            w="90%"
-            p="7"
-            type="email"
-            placeholder="Email"
-            {...register("email")}
-          />
-          <Input
-            border="2px"
-            borderColor="gray.40"
-            m="10px"
-            w="90%"
-            p="7"
-            type="email"
-            placeholder="Senha"
-            {...register("password")}
-          />
-          <Input
-            border="2px"
-            borderColor="gray.40"
-            m="10px"
-            w="90%"
-            p="7"
-            placeholder="Confirmar Senha"
-            {...register("confirmPassword")}
-            type="password"
-          />
-
-          <Stack alignItems="center">
-            <Button
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormLabel p="3" fontWeight="600" fontSize="18px" htmlFor="email">
+              Cadastro{" "}
+              <Text
+                fontSize={["11px", "11px", "14px", "14px"]}
+                marginLeft="220px"
+                color="gray.30"
+              >
+                <Link rel="stylesheet" to="/">
+                  Retornar para o Login
+                </Link>
+              </Text>
+            </FormLabel>
+            <Input
+              border="2px"
+              borderColor="gray.40"
               m="10px"
-              p="7"
               w="90%"
-              color="gray.10"
-              bgColor="green.100"
-              type="submit"
-            >
-              Logar
-            </Button>
-          </Stack>
+              p="5"
+              placeholder="Nome"
+              {...register("name")}
+            />
+            <Text fontSize="11px" zIndex="1" color="red.22">
+              {errors.name?.message}
+            </Text>
+            <Input
+              border="2px"
+              borderColor="gray.40"
+              m="10px"
+              w="90%"
+              p="5"
+              type="email"
+              placeholder="Email"
+              {...register("email")}
+            />
+            <Text fontSize="11px" zIndex="1" color="red.22">
+              {errors.email?.message}
+            </Text>
+            <Input
+              border="2px"
+              borderColor="gray.40"
+              m="10px"
+              w="90%"
+              p="5"
+              type="password"
+              placeholder="Senha"
+              {...register("password")}
+            />
+            <Text fontSize="11px" zIndex="1" color="red.22">
+              {errors.password?.message}
+            </Text>
+            <Input
+              border="2px"
+              borderColor="gray.40"
+              m="10px"
+              w="90%"
+              p="5"
+              placeholder="Confirmar Senha"
+              {...register("confirmPassword")}
+              type="password"
+            />
+            <Text fontSize="11px" zIndex="1" color="red.22">
+              {errors.confirmPassword?.message}
+            </Text>
+            <Stack alignItems="center">
+              <Button
+                m="10px"
+                p="5"
+                w="90%"
+                color="gray.10"
+                bgColor="green.100"
+                type="submit"
+              >
+                Cadastrar
+              </Button>
+            </Stack>
+          </form>
         </FormControl>
       </Flex>
     </Flex>
   );
 };
 export default Register;
-
-{
-  /* <div>
-<form onSubmit={handleSubmit(onSubmit)}>
-  <input {...register("name")}></input>
-  <input {...register("email")}></input>
-  <input {...register("password")} type="password"></input>
-  <input {...register("confirmPassword")} type="password"></input>
-  <button type="submit">Cadastrar</button>
-</form>
-</div> */
-}

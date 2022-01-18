@@ -1,5 +1,12 @@
 import axios from "axios";
-import { createContext, ReactNode, useContext, useState } from "react";
+import jwtDecode from "jwt-decode";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface childrenProps {
   children: ReactNode;
@@ -11,14 +18,14 @@ interface UserData {
   confirmPassword?: string;
 }
 
-interface UserToken {
-  token: string;
+interface JWT {
+  sub: string;
 }
 
 interface Product {
   name: string;
   price: string;
-  id: string;
+  id?: string;
   type: string;
   img: string;
   search?: object;
@@ -27,21 +34,27 @@ interface Product {
 interface ApiProviderData {
   menu: Product[];
   cart: Product[];
+
   filteredMenu: (search: Product[]) => void;
   userRegister: (data: UserData) => void;
   userLogin: (data: UserData) => void;
   getProducts: () => void;
+  cartProducts: () => void;
   addProduct: (product: Product) => void;
-  removeProduct: (product: Product) => void;
+  excludeProduct: (name: string) => void;
+  removeProduct: (id: string) => void;
 }
 export const ApiContext = createContext<ApiProviderData>({} as ApiProviderData);
 
 export const ApiProvider = ({ children }: childrenProps) => {
   const [cart, setCart] = useState<Product[]>([]);
   const [menu, setMenu] = useState<Product[]>([]);
+
   const userRegister = (data: UserData) => {
     axios
-      .post("http//localhost:3001/register", { data })
+      .post("https://json-server-hamburgueriakenzie.herokuapp.com/register", {
+        data,
+      })
       .then((res) => console.log(res.data))
       .catch((err) => {
         console.log(err.message);
@@ -50,15 +63,21 @@ export const ApiProvider = ({ children }: childrenProps) => {
 
   const userLogin = (data: UserData) => {
     axios
-      .post("http//localhost:3001/login", { data })
-      .then((res) => console.log(res.data))
+      .post("https://json-server-hamburgueriakenzie.herokuapp.com/login", {
+        data,
+      })
+      .then((res) => {
+        console.log(res.data);
+        localStorage.setItem("token", JSON.stringify(res.data.accessToken));
+      })
       .catch((err) => {
         console.log(err.message);
       });
   };
+
   const getProducts = () => {
     axios
-      .get("http://localhost:3001/products")
+      .get("https://json-server-hamburgueriakenzie.herokuapp.com/products")
       .then((res) => {
         console.log(res.data);
         setMenu(res.data);
@@ -73,17 +92,90 @@ export const ApiProvider = ({ children }: childrenProps) => {
     console.log(search);
   };
 
-  const addProduct = (product: Product) => {
-    setCart([...cart, product]);
+  const cartProducts = () => {
+    const id = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
+    axios
+      .get(
+        `https://json-server-hamburgueriakenzie.herokuapp.com/cart/?userId=${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        setCart(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  const removeProduct = (product: Product) => {
-    const newCartList = cart.filter((item) => {
-      return item.name !== product.name;
-    });
-    setCart(newCartList);
+  const addProduct = (product: Product) => {
+    const token = localStorage.getItem("token");
+    axios
+      .post(
+        "https://json-server-hamburgueriakenzie.herokuapp.com/cart",
+        { ...product, userId: userId },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((res) => console.log(res.data))
+      .then(() => {
+        cartProducts();
+      })
+      .catch((err) => console.log(err));
   };
-  console.log(getProducts);
+
+  const removeProduct = (id: string) => {
+    const token = localStorage.getItem("token");
+    console.log(id);
+    axios
+      .delete(
+        `https://json-server-hamburgueriakenzie.herokuapp.com/cart/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+
+        cartProducts();
+      })
+      .catch((err) => {
+        cartProducts();
+        console.log(err);
+      });
+  };
+
+  const excludeProduct = (name: string) => {
+    const filteredList = cart
+      .filter((item, i) => {
+        return item.name === name;
+      })
+      .map((item) => {
+        return item.id;
+      });
+
+    console.log(filteredList);
+    filteredList.map((id) => {
+      console.log(id);
+      return removeProduct(id || "");
+    });
+  };
+
+  useEffect(() => {
+    cartProducts();
+  }, []);
+
+  const decodedId = jwtDecode(localStorage.getItem("token") || "");
+  const userId = (decodedId as JWT).sub;
+  console.log(jwtDecode(localStorage.getItem("token") || ""));
+
+  localStorage.setItem("userId", userId);
+  console.log(decodedId);
+
   return (
     <ApiContext.Provider
       value={{
@@ -92,9 +184,11 @@ export const ApiProvider = ({ children }: childrenProps) => {
         addProduct,
         removeProduct,
         getProducts,
+        cartProducts,
         cart,
         menu,
         filteredMenu,
+        excludeProduct,
       }}
     >
       {children}
