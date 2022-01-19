@@ -15,6 +15,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { toast, Toaster } from "react-hot-toast";
 
 interface UserData {
   name: string;
@@ -35,7 +36,10 @@ const Register = () => {
     password: yup
       .string()
       .required("Digite uma senha")
-      .min(6, "Sua senha precisa ter min 6 caracteres"),
+      .matches(
+        /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+        "Senha precisa ter min 8 caracteres, sendo um Maiusculo, um numero e um especial"
+      ),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("password"), null], "confirmação não está identica"),
@@ -56,7 +60,7 @@ const Register = () => {
         "https://json-server-hamburgueriakenzie.herokuapp.com/register",
         data
       )
-      .then((res) => console.log(res.data))
+      .then((res) => toast.success(`Cadastrado com sucesso, ${data.name}`))
       .then(() => navigate("/"))
       .catch((err) => console.log(err));
   };
@@ -70,8 +74,9 @@ const Register = () => {
       justifyContent={["center", "center", "space-evenly", "space-evenly"]}
       direction={["column", "column", "row", "row"]}
     >
-      <Flex direction={"column"}>
-        <Flex h="12vh" alignItems="center">
+      <Toaster position="top-right" reverseOrder={false} />
+      <Flex direction={"column"} marginBottom={["0", "0", "20px", "50px"]}>
+        <Flex h={["10vh", "12vh", "15vh", "15vh"]} alignItems="center">
           <Text fontSize="4xl" fontWeight="600" p="1">
             Burguer
           </Text>
@@ -80,14 +85,14 @@ const Register = () => {
           </Text>
         </Flex>
         <Container
-          h="95px"
+          h={["80px", "95px", "95px", "95px"]}
           display="flex"
           flexDirection="row"
           alignItems="center"
           border="solid 1px "
           borderRadius="3px"
           borderColor="gray.20"
-          w={["377px"]}
+          w={["320px", "377px", "377px", "377px"]}
         >
           <Container
             bgColor="#27ae6047"
@@ -112,8 +117,8 @@ const Register = () => {
 
       <Flex>
         <FormControl
-          h={["471px", "471px", "478px", "461px"]}
-          w={["387px", "387px", "387px", "500px"]}
+          h={["441px", "471px", "478px", "461px"]}
+          w={["320px", "377px", "377px", "500px"]}
           margin={"10px"}
           border="solid 2px"
           borderColor="gray.20"
@@ -125,7 +130,9 @@ const Register = () => {
               Cadastro{" "}
               <Text
                 fontSize={["11px", "11px", "14px", "14px"]}
-                marginLeft="220px"
+                position="relative"
+                left="60%"
+                marginBotton="50px"
                 color="gray.30"
               >
                 <Link rel="stylesheet" to="/">
@@ -168,7 +175,7 @@ const Register = () => {
               placeholder="Senha"
               {...register("password")}
             />
-            <Text fontSize="11px" zIndex="1" color="red.22">
+            <Text fontSize="10px" zIndex="1" color="red.22">
               {errors.password?.message}
             </Text>
             <Input

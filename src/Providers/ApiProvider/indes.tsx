@@ -11,12 +11,6 @@ import {
 interface childrenProps {
   children: ReactNode;
 }
-interface UserData {
-  email: string;
-  password: string;
-  name?: string;
-  confirmPassword?: string;
-}
 
 interface JWT {
   sub: string;
@@ -36,8 +30,6 @@ interface ApiProviderData {
   cart: Product[];
 
   filteredMenu: (search: Product[]) => void;
-  userRegister: (data: UserData) => void;
-  userLogin: (data: UserData) => void;
   getProducts: () => void;
   cartProducts: () => void;
   addProduct: (product: Product) => void;
@@ -45,35 +37,9 @@ interface ApiProviderData {
   removeProduct: (id: string) => void;
 }
 export const ApiContext = createContext<ApiProviderData>({} as ApiProviderData);
-
 export const ApiProvider = ({ children }: childrenProps) => {
   const [cart, setCart] = useState<Product[]>([]);
   const [menu, setMenu] = useState<Product[]>([]);
-
-  const userRegister = (data: UserData) => {
-    axios
-      .post("https://json-server-hamburgueriakenzie.herokuapp.com/register", {
-        data,
-      })
-      .then((res) => console.log(res.data))
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
-
-  const userLogin = (data: UserData) => {
-    axios
-      .post("https://json-server-hamburgueriakenzie.herokuapp.com/login", {
-        data,
-      })
-      .then((res) => {
-        console.log(res.data);
-        localStorage.setItem("token", JSON.stringify(res.data.accessToken));
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
 
   const getProducts = () => {
     axios
@@ -112,7 +78,9 @@ export const ApiProvider = ({ children }: childrenProps) => {
   };
 
   const addProduct = (product: Product) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || "";
+    const decodedId = jwtDecode(localStorage.getItem("token") || "");
+    const userId = (decodedId as JWT).sub;
     axios
       .post(
         "https://json-server-hamburgueriakenzie.herokuapp.com/cart",
@@ -129,7 +97,7 @@ export const ApiProvider = ({ children }: childrenProps) => {
   };
 
   const removeProduct = (id: string) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || "";
     console.log(id);
     axios
       .delete(
@@ -169,18 +137,9 @@ export const ApiProvider = ({ children }: childrenProps) => {
     cartProducts();
   }, []);
 
-  const decodedId = jwtDecode(localStorage.getItem("token") || "");
-  const userId = (decodedId as JWT).sub;
-  console.log(jwtDecode(localStorage.getItem("token") || ""));
-
-  localStorage.setItem("userId", userId);
-  console.log(decodedId);
-
   return (
     <ApiContext.Provider
       value={{
-        userRegister,
-        userLogin,
         addProduct,
         removeProduct,
         getProducts,

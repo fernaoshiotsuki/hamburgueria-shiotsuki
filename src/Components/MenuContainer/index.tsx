@@ -4,12 +4,6 @@ import { ApiContext } from "../../Providers/ApiProvider/indes";
 
 const MenuContainer = () => {
   const { menu, addProduct } = useContext(ApiContext);
-  const storageMenu = localStorage.getItem("menu");
-  let displayItems = undefined;
-
-  if (typeof storageMenu === "string") {
-    displayItems = JSON.parse(storageMenu);
-  }
 
   useEffect(() => {
     console.log(menu);

@@ -58,7 +58,7 @@ const Cart = ({ Displayed }: DisplayState) => {
 
   useEffect(() => {
     cartProducts();
-    console.log("11");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -173,11 +173,11 @@ const Cart = ({ Displayed }: DisplayState) => {
                     </Container>
                   </div>
 
-                  <div>
+                  <Flex marginTop="5px">
                     <button onClick={() => excludeProduct(prod?.name || "")}>
                       <GoTrashcan size="21px" />
                     </button>
-                  </div>
+                  </Flex>
                 </Flex>
               );
             })

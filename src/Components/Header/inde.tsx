@@ -63,7 +63,7 @@ const Header = () => {
         ]}
       >
         <Flex h="37px" alignItems="center">
-          <Text fontSize="4xl" fontWeight="600" p="1">
+          <Text fontSize={["2xl", "2xl", "3xl", "3xl"]} fontWeight="600" p="1">
             Burguer
           </Text>
           <Text color="red.22" fontSize="xl" fontWeight="600" marginTop="10px">
@@ -89,7 +89,7 @@ const Header = () => {
         <Button
           color="gray.10"
           bgColor="green.100"
-          margin={["5px", "5px", "0px 5px", "0px 20px"]}
+          margin={["1px 2px", "0px 5px", "0px 5px", "0px 20px"]}
           right={["1%", "1%", "1%", null]}
           position={[
             handleSearchInput !== "block" ? null : "absolute",
@@ -106,7 +106,7 @@ const Header = () => {
           bgColor="gray.20"
           position={"relative"}
           right="2%"
-          margin={["5px", "5px", "0px 5px", "0px 20px"]}
+          margin={["2px 0px", "5px", "0px 5px", "0px 20px"]}
           display={[
             handleSearchInput === "none" ? "block" : "none",
             handleSearchInput === "none" ? "block" : "none",
@@ -119,7 +119,7 @@ const Header = () => {
         </Button>
         <Button
           bgColor="gray.20"
-          margin={["5px", "5px", "0px 5px", "0px 20px"]}
+          margin={["2px 0px", "5px", "0px 5px", "0px 20px"]}
           display={[
             handleSearchInput === "none" ? "block" : "none",
             handleSearchInput === "none" ? "block" : "none",
